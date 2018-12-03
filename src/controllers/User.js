@@ -2,7 +2,7 @@ import moment from "moment";
 import uuidv4 from "uuid/v4";
 import db from "../db";
 import Helper from "./Helper";
-import colors from "../utils/colors";
+import { redText, greenText } from "../utils/colors";
 import queries from "./queries";
 
 const User = {
@@ -19,21 +19,25 @@ const User = {
       uuidv4(),
       req.body.email,
       hashedPassword,
-      req.body.firstname || null,
-      req.body.lastname || null,
-      moment(new Date()),
-      null
+      req.body.firstName || null,
+      req.body.lastName || null,
+      moment(new Date())
     ];
+
+    const { data } = await db.query(queries.createUser, values);
+    console.log({ data });
 
     try {
       const { data } = await db.query(queries.createUser, values);
-      const token = Helper.issueToken(data[0].id);
+      const token = Helper.issueToken(data[0].userid);
+      console.log(greenText("201"), "POST /api/v1/users");
       return res.status(201).send({ token });
     } catch (err) {
-      if (error.routing === "_bt_check_unique") {
+      if (err.routing === "_bt_check_unique") {
         return res.status(400).send({ message: "Email already in use" });
       }
-      return res.status(400).send(error);
+      console.log(redText("400"), "POST /api/v1/users - Error below\n:", err);
+      return res.status(400).send(err);
     }
   },
 
@@ -72,3 +76,5 @@ const User = {
     }
   }
 };
+
+export default User;

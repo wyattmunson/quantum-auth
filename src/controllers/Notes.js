@@ -9,7 +9,7 @@ const Note = {
   async create(req, res) {
     const values = [
       uuidv4(),
-      req.body.userId,
+      req.user.userId,
       req.body.noteContent,
       req.body.noteHeader,
       moment(new Date()),

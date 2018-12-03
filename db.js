@@ -34,7 +34,7 @@ const createNotesTable = () => {
 };
 
 const createUsersTable = () => {
-  makeDatabaseCall(script.createUsersTable());
+  makeDatabaseCall(scripts.createUsersTable());
 };
 
 // Create tables
@@ -84,7 +84,9 @@ pool.on("remove", () => {
 
 module.exports = {
   createTables,
-  dropTables
+  dropTables,
+  createNotesTable,
+  createUsersTable
 };
 
 require("make-runnable");

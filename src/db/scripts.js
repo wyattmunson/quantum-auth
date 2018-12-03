@@ -1,5 +1,5 @@
 // CREATE NOTES TABLE
-export const createNotesTable = () => {
+const createNotesTable = () => {
   return `CREATE TABLE IF NOT EXISTS
     notes (
         noteid UUID PRIMARY KEY,
@@ -12,7 +12,7 @@ export const createNotesTable = () => {
 };
 
 // CREATE USERS TABLE
-export const createUsersTable = () => {
+const createUsersTable = () => {
   return `CREATE TABLE IF NOT EXISTS
     users (
         userid UUID PRIMARY KEY,
@@ -25,10 +25,19 @@ export const createUsersTable = () => {
     )`;
 };
 
-export const deleteUsersTable = () => {
+// DELETE USERS TABLE
+const deleteUsersTable = () => {
   return `DROP TABLE IF EXISTS users;`;
 };
 
-export const deleteNotesTable = () => {
+// DELETE NOTES TABLE
+const deleteNotesTable = () => {
   return `DELETE TABLE IF EXISTS notes;`;
+};
+
+module.exports = {
+  createNotesTable,
+  createUsersTable,
+  deleteUsersTable,
+  deleteNotesTable
 };
