@@ -1,5 +1,6 @@
 const { Pool } = require("pg");
 const dotenv = require("dotenv");
+const scripts = require("./src/db/scripts");
 
 dotenv.config();
 
@@ -14,6 +15,27 @@ const pool = new Pool({
 pool.on("connect", () => {
   console.log("DB connection esatblished");
 });
+
+const makeDatabaseCall = input => {
+  pool
+    .query(input)
+    .then(res => {
+      console.log(res);
+      pool.end();
+    })
+    .catch(err => {
+      console.log(err);
+      pool.end();
+    });
+};
+
+const createNotesTable = () => {
+  makeDatabaseCall(scripts.createNotesTable());
+};
+
+const createUsersTable = () => {
+  makeDatabaseCall(script.createUsersTable());
+};
 
 // Create tables
 const createTables = () => {
