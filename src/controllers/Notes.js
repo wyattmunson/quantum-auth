@@ -1,5 +1,6 @@
 import moment from "moment";
 import uuidv4 from "uuid/v4";
+import jwt from "jsonwebtoken";
 import db from "../db";
 import queries from "./queries";
 import { greenText, redText } from "../utils/colors";
@@ -7,13 +8,18 @@ import { greenText, redText } from "../utils/colors";
 const Note = {
   // CREATE NTOE
   async create(req, res) {
+    // Get userId from token
+    const token = req.headers["x-access-token"];
+    const decodeToken = await jwt.verify(token, process.env.SECRET);
+
     const values = [
       uuidv4(),
-      req.user.userId,
+      decodeToken.userId,
       req.body.noteContent,
       req.body.noteHeader,
       moment(new Date()),
-      moment(new Date())
+      moment(new Date()),
+      req.body.noteType
     ];
 
     try {
@@ -57,6 +63,26 @@ const Note = {
     }
   },
 
+  // GET NOTE BY USERID
+  async getUserNotes(req, res) {
+    console.log("GET NOTES BY USER HIT");
+    // Get userId from token
+    const token = req.headers["x-access-token"];
+    const decodeToken = await jwt.verify(token, process.env.SECRET);
+    console.log("DECODED TOKEN:", decodeToken.userId);
+    try {
+      const queryText = `SELECT * FROM notes WHERE userid=$1`;
+      const { rows } = await db.query(queryText, [decodeToken.userId]);
+      if (!rows[0]) {
+        return res.status(404).send({ message: "No notes found" });
+      }
+      return res.status(200).send({ rows });
+    } catch (error) {
+      console.log(redText("400"), error);
+      return res.status(400).send(error);
+    }
+  },
+
   //   UPDATE NOTE
   async update(req, res) {
     try {
@@ -87,9 +113,9 @@ const Note = {
   //   DELTE NOTE
   async delete(req, res) {
     try {
-      const { data } = await db.query(queries.deleteNotes, [req.params.id]);
-      if (!data[0]) {
-        return res.stats(404).send({ message: "No such note" });
+      const { rows } = await db.query(queries.deleteNotes, [req.params.id]);
+      if (!rows[0]) {
+        return res.status(404).send({ message: "No such note" });
       }
       console.log(greenText("204"), `DELETE /api/v1/notes/${[req.params.id]}`);
       return res.sendStatus(204);

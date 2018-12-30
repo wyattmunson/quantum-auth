@@ -20,6 +20,7 @@ export default {
           resolve(res);
         })
         .catch(err => {
+          console.log("ERROR", err);
           reject(err);
         });
     });

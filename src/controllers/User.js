@@ -4,6 +4,7 @@ import db from "../db";
 import Helper from "./Helper";
 import { redText, greenText } from "../utils/colors";
 import queries from "./queries";
+import jwt from "jsonwebtoken";
 
 const User = {
   async create(req, res) {
@@ -23,13 +24,15 @@ const User = {
       req.body.lastName || null,
       moment(new Date())
     ];
+    console.log("VALUES", values);
 
-    const { data } = await db.query(queries.createUser, values);
-    console.log({ data });
+    // const { data } = await db.query(queries.createUser, values);
+    // console.log("DATA", { data });
 
     try {
-      const { data } = await db.query(queries.createUser, values);
-      const token = Helper.issueToken(data[0].userid);
+      // This must be called rows or it won't work
+      const { rows } = await db.query(queries.createUser, values);
+      const token = Helper.issueToken(rows[0].userid);
       console.log(greenText("201"), "POST /api/v1/users");
       return res.status(201).send({ token });
     } catch (err) {
@@ -37,7 +40,7 @@ const User = {
         return res.status(400).send({ message: "Email already in use" });
       }
       console.log(redText("400"), "POST /api/v1/users - Error below\n:", err);
-      return res.status(400).send(err);
+      return res.status(400).send("400 - Could not add record");
     }
   },
 
@@ -49,18 +52,42 @@ const User = {
       return res.status(400).send({ message: "That's not a valid email" });
     }
     try {
-      const { data } = await db.query(queries.selectUserByEmail, [
+      const { rows } = await db.query(queries.selectUserByEmail, [
         req.body.email
       ]);
       if (!rows[0]) {
         return res.status(400).send({ message: "That's not a valid login" });
       }
-      if (!Helper.comparePassword(data[0].passowrd, req.body.password)) {
+      if (!Helper.comparePassword(rows[0].password, req.body.password)) {
         return res.status(400).send({ message: "That's not a valid login" });
       }
-      const token = Helper.issueToken(data[0].userid);
+      const token = Helper.issueToken(rows[0].userid);
+      return res.status(200).send({ token });
     } catch (err) {
+      console.log("CATCH ALL ERROR:\n", err);
       return res.status(400).send(err);
+    }
+  },
+
+  async getMe(req, res) {
+    const token = req.headers["x-access-token"];
+    if (!token) {
+      return res.status(400).send({ message: "Must include token" });
+    }
+    console.log("GET ME HIT");
+    try {
+      const decodeToken = await jwt.verify(token, process.env.SECRET);
+      const queryText = `SELECT * FROM users WHERE userid=$1`;
+      const { rows } = await db.query(queryText, [decodeToken.userId]);
+      if (!rows[0]) {
+        return res.status(400).send({ message: "Token invalid" });
+      }
+      console.log("GET ME HIT");
+      console.log("ROWS:", { rows });
+      return res.status(200).send({ rows });
+    } catch (error) {
+      console.log(redText("400"), error);
+      return res.status(400).send(error);
     }
   },
 

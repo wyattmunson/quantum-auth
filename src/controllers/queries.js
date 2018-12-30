@@ -3,8 +3,8 @@ module.exports = {
   selectAllNotes: `SELECT * FROM notes;`,
   selectNoteById: `SELECT * FROM notes WHERE noteid=$1;`,
   createNote: `INSERT INTO
-    notes (noteid, userid, notecontent, noteheader, createddate, modifieddate)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    notes (noteid, userid, notecontent, noteheader, createddate, modifieddate, notetype)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *`,
   updateNote: `UPDATE notes
     SET userid=$1, notecontent=$2, noteheader=$3, createddate=$4

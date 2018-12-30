@@ -5,11 +5,20 @@ import Notes from "./src/controllers/Notes";
 import User from "./src/controllers/User";
 import Auth from "./src/middleware/Auth";
 import { greenText, redText, underline, cyanText } from "./src/utils/colors";
-import { SIGUNUSED } from "constants";
 
 const app = express();
 
 app.use(express.json());
+
+// I love it - CORS solution
+app.use((req, res, next) => {
+  res.append("Access-Control-Allow-Origin", ["*"]);
+  res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+  res.append("Allow", "GET,PUT,POST,DELETE,OPTIONS,HEAD");
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  res.append("Access-Control-Allow-Headers", "x-access-token");
+  next();
+});
 
 app.get("/", (req, res) => {
   return res
@@ -20,6 +29,7 @@ app.get("/", (req, res) => {
 // NOTES ROUTES
 app.post("/api/v1/notes", Auth.validateToken, Notes.create);
 app.get("/api/v1/notes", Notes.getAll);
+app.get("/api/v1/notes/byuser", Notes.getUserNotes);
 app.get("/api/v1/notes/:id", Notes.getOne);
 app.put("/api/v1/notes/:id", Notes.update);
 app.delete("/api/v1/notes/:id", Notes.delete);
@@ -27,6 +37,7 @@ app.delete("/api/v1/notes/:id", Notes.delete);
 // USER ROUTE
 app.post("/api/v1/users", User.create);
 app.post("/api/v1/users/login", User.login);
+app.get("/api/v1/users/me", Auth.validateToken, User.getMe);
 app.delete("/api/v1/users/me", Auth.validateToken, User.delete);
 
 app.listen(5151);
