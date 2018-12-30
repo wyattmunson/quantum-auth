@@ -14,6 +14,9 @@ module.exports = {
 
   // USER QUERIES
   selectUserByEmail: `SELECT * FROM users WHERE email = $1`,
+  selectUserById: `SELECT userid, email, firstname, lastname, createddate 
+  FROM users 
+  WHERE userid = $1`,
   createUser: `INSERT INTO users (userid, email, password, firstname, lastname, createddate)
     VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING *`,

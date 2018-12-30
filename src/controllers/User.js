@@ -5,8 +5,12 @@ import Helper from "./Helper";
 import { redText, greenText } from "../utils/colors";
 import queries from "./queries";
 import jwt from "jsonwebtoken";
+import { formatGetMe } from "./responseFormatter";
 
 const User = {
+  /////////////////
+  // CREATE USER //
+  /////////////////
   async create(req, res) {
     if (!req.body.email || !req.body.password) {
       return res.status(400).send({ message: "Missing email or password" });
@@ -44,10 +48,15 @@ const User = {
     }
   },
 
+  ///////////
+  // LOGIN //
+  ///////////
   async login(req, res) {
+    // Validate request body has email and password
     if (!req.body.email || !req.body.password) {
       return res.status(400).send({ message: "Emaill and password required" });
     }
+    // Valid email using REGEX
     if (!Helper.validateEmail) {
       return res.status(400).send({ message: "That's not a valid email" });
     }
@@ -69,6 +78,9 @@ const User = {
     }
   },
 
+  ////////////
+  // GET ME //
+  ////////////
   async getMe(req, res) {
     const token = req.headers["x-access-token"];
     if (!token) {
@@ -77,20 +89,24 @@ const User = {
     console.log("GET ME HIT");
     try {
       const decodeToken = await jwt.verify(token, process.env.SECRET);
-      const queryText = `SELECT * FROM users WHERE userid=$1`;
-      const { rows } = await db.query(queryText, [decodeToken.userId]);
+      const { rows } = await db.query(queries.selectUserById, [
+        decodeToken.userId
+      ]);
       if (!rows[0]) {
         return res.status(400).send({ message: "Token invalid" });
       }
-      console.log("GET ME HIT");
-      console.log("ROWS:", { rows });
-      return res.status(200).send({ rows });
+      // Format opbject keys to camelCase
+      formatGetMe(rows);
+      return res.status(200).send(rows[0]);
     } catch (error) {
       console.log(redText("400"), error);
       return res.status(400).send(error);
     }
   },
 
+  ////////////
+  // DELETE //
+  ////////////
   async delete(req, res) {
     try {
       const { data } = await db.query(queries.deleteUser, [req.user.userid]);
@@ -99,6 +115,7 @@ const User = {
       }
       return res.sendStatus(204);
     } catch (err) {
+      console.log(redText("400"), error);
       return res.status(400).send(err);
     }
   }
