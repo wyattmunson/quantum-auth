@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { INSPECT_MAX_BYTES } from "buffer";
 
 const Helper = {
   // HASH PASSWORD

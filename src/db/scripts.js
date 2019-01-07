@@ -22,7 +22,32 @@ const createUsersTable = () => {
         lastname VARCHAR(128),
         createddate TIMESTAMP WITH TIME ZONE,
         modifieddate TIMESTAMP WITH TIME ZONE
-    )`;
+    );`;
+};
+
+const createMealsTable = () => {
+  return `CREATE TABLE IF NOT EXISTS
+    meals (
+      mealid UUID PRIMARY KEY,
+      userref UUID REFERENCES users (userid),
+      mealtime TIMESTAMP WITH TIME ZONE,
+      mealtype VARCHAR(128),
+      createddate TIMESTAMP WITH TIME ZONE,
+      updateddate TIMESTAMP WITH TIME ZONE
+    );`;
+};
+
+const createMealItemTable = () => {
+  return `CREATE TABLE IF NOT EXISTS
+      mealitems (
+      mealitemid UUID PRIMARY KEY,
+      mealref UUID REFERENCES meals(mealid),
+      itemname VARCHAR(255),
+      qty VARCHAR(64),
+      qtytype VARCHAR(64),
+      createddate TIMESTAMP WITH TIME ZONE,
+      updateddate TIMESTAMP WITH TIME ZONE
+    );`;
 };
 
 // DELETE USERS TABLE
@@ -39,5 +64,7 @@ module.exports = {
   createNotesTable,
   createUsersTable,
   deleteUsersTable,
-  deleteNotesTable
+  deleteNotesTable,
+  createMealsTable,
+  createMealItemTable
 };

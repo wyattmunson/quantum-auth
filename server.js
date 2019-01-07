@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import "babel-polyfill";
 import Notes from "./src/controllers/Notes";
 import User from "./src/controllers/User";
+import Meal from "./src/controllers/Meal";
 import Auth from "./src/middleware/Auth";
 import { greenText, redText, underline, cyanText } from "./src/utils/colors";
 
@@ -40,6 +41,12 @@ app.post("/api/v1/users", User.create);
 app.post("/api/v1/users/login", User.login);
 app.get("/api/v1/users/me", Auth.validateToken, User.getMe);
 app.delete("/api/v1/users/me", Auth.validateToken, User.delete);
+
+// MEALS ROUTE
+app.post("/api/v1/meals", Meal.create);
+app.get("/api/v1/meals/byuser", Meal.getByUser);
+app.get("/api/v1/meals/withitems", Meal.getMealWithItem);
+app.post("/api/v1/meals/item", Meal.addItemToMeal);
 
 app.listen(5151);
 console.log(underline("QUANTUM AUTH"));

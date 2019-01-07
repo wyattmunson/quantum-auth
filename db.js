@@ -37,6 +37,15 @@ const createUsersTable = () => {
   makeDatabaseCall(scripts.createUsersTable());
 };
 
+const createMealsTable = () => {
+  console.log("CALL TO MAKE CALL");
+  makeDatabaseCall(scripts.createMealsTable());
+};
+
+const createMealItemTable = () => {
+  makeDatabaseCall(scripts.createMealItemTable());
+};
+
 // Create tables
 const createTables = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
@@ -86,7 +95,9 @@ module.exports = {
   createTables,
   dropTables,
   createNotesTable,
-  createUsersTable
+  createUsersTable,
+  createMealsTable,
+  createMealItemTable
 };
 
 require("make-runnable");
