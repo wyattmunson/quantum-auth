@@ -50,6 +50,21 @@ const createMealItemTable = () => {
     );`;
 };
 
+const createIngredientTable = () => {
+  return `CREATE TABLE IF NOT EXISTS ingredients (
+      ingredientid UUID PRIMARY KEY,
+      name VARCHAR(255),
+      servingsize VARCHAR(64),
+      unit VARCHAR(63),
+      protein VARCHAR(63),
+      carb VARCHAR(63),
+      sugar VARCHAR(63),
+      fat VARCHAR(63),
+      satfat VARCHAR(63),
+      transfat VARCHAR(63)
+  );`;
+};
+
 // DELETE USERS TABLE
 const deleteUsersTable = () => {
   return `DROP TABLE IF EXISTS users;`;
@@ -66,5 +81,6 @@ module.exports = {
   deleteUsersTable,
   deleteNotesTable,
   createMealsTable,
-  createMealItemTable
+  createMealItemTable,
+  createIngredientTable
 };

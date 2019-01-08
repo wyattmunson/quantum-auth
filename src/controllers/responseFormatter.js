@@ -82,35 +82,3 @@ export const formatMealItem = rows => {
   }
   return rows;
 };
-
-// let awe = {
-//   mealitemid: "071accf6-f9a2-41a6-a677-6ba9eaa36994",
-//   mealref: "cd99b11f-a34e-46bb-84e9-afaea4cc5123",
-//   itemname: "Eggs",
-//   qty: "3",
-//   qtytype: "units",
-//   createddate: "2018-12-31T01:46:57.166Z",
-//   updateddate: null
-// };
-
-// let response = rows[0];
-//   response.mealId = response.mealid;
-//   delete response.mealid;
-//   response.userId = response.userref;
-//   delete response.userref;
-//   response.mealType = response.mealtype;
-//   delete response.mealtype;
-//   response.createdDate = response.createddate;
-//   delete response.createddate;
-//   response.updatedDate = response.updateddate;
-//   delete response.updateddate;
-//   response.mealTime = response.mealtiume;
-//   delete response.mealtime;
-//   return rows;
-
-// "mealid"
-// "userref"
-// "mealtime"
-// "mealtype"
-// "createddate"
-// "updateddate"

@@ -28,6 +28,10 @@ app.get("/", (req, res) => {
     .send({ message: "I can't take another 199 of these!" });
 });
 
+///////////////
+// ENDPOINTS //
+///////////////
+
 // NOTES ROUTES
 app.post("/api/v1/notes", Auth.validateToken, Notes.create);
 app.get("/api/v1/notes", Notes.getAll);
@@ -36,13 +40,13 @@ app.get("/api/v1/notes/:id", Notes.getOne);
 app.put("/api/v1/notes/:id", Notes.update);
 app.delete("/api/v1/notes/:id", Notes.delete);
 
-// USER ROUTE
+// USER ROUTES
 app.post("/api/v1/users", User.create);
 app.post("/api/v1/users/login", User.login);
 app.get("/api/v1/users/me", Auth.validateToken, User.getMe);
 app.delete("/api/v1/users/me", Auth.validateToken, User.delete);
 
-// MEALS ROUTE
+// MEALS ROUTES
 app.post("/api/v1/meals", Meal.create);
 app.get("/api/v1/meals/byuser", Meal.getByUser);
 app.get("/api/v1/meals/withitems", Meal.getMealWithItem);

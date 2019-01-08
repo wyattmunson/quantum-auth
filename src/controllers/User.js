@@ -30,9 +30,6 @@ const User = {
     ];
     console.log("VALUES", values);
 
-    // const { data } = await db.query(queries.createUser, values);
-    // console.log("DATA", { data });
-
     try {
       // This must be called rows or it won't work
       const { rows } = await db.query(queries.createUser, values);
@@ -71,6 +68,7 @@ const User = {
         return res.status(400).send({ message: "That's not a valid login" });
       }
       const token = Helper.issueToken(rows[0].userid);
+      console.log(greenText(200), "POST /api/v1/users/login");
       return res.status(200).send({ token });
     } catch (err) {
       console.log("CATCH ALL ERROR:\n", err);
@@ -97,6 +95,8 @@ const User = {
       }
       // Format opbject keys to camelCase
       formatGetMe(rows);
+
+      console.log(greenText(200), "GET /api/v1/users/me");
       return res.status(200).send(rows[0]);
     } catch (error) {
       console.log(redText("400"), error);
