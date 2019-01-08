@@ -5,7 +5,12 @@ import jwt from "jsonwebtoken";
 import Helper from "./Helper";
 import queries from "./queries";
 import { redText, greenText } from "../utils/colors";
-import { formatCreateMeal, formatAddMealItem } from "./responseFormatter";
+import {
+  formatCreateMeal,
+  formatAddMealItem,
+  formatGetMeal,
+  formatMealItem
+} from "./responseFormatter";
 
 const Meal = {
   async create(req, res) {
@@ -51,6 +56,7 @@ const Meal = {
       if (!rows[0]) {
         return res.status(404).send({ message: "No meals found" });
       }
+      formatGetMeal(rows);
       return res.status(200).send({ rows });
     } catch (err) {
       console.log(redText("400"), err);
@@ -71,15 +77,17 @@ const Meal = {
       const { rows } = await db.query(queries.getMealByUser, [
         decodeToken.userId
       ]);
+      formatGetMeal(rows);
       let mealList = rows;
 
       for (let item of mealList) {
         console.log(item);
-        const { mealid } = item;
-        const { rows } = await db.query(queries.getItemsByMeal, [mealid]);
+        const { mealId } = item;
+        const { rows } = await db.query(queries.getItemsByMeal, [mealId]);
+        formatMealItem(rows);
         console.log("INTERNAL ROWS:", rows);
         let mealItemList = rows;
-        let obj = mealList.find(x => x.mealid === item.mealid);
+        let obj = mealList.find(x => x.mealId === item.mealId);
         obj.mealItem = mealItemList;
       }
       if (!rows[0]) {
