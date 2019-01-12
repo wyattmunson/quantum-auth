@@ -36,5 +36,18 @@ module.exports = {
     WHERE userref = $1`,
   getItemsByMeal: `SELECT *
     FROM mealitems
-    WHERE mealref = $1`
+    WHERE mealref = $1`,
+
+  // WORKOUT QUERIES
+  createWorkout: `INSERT INTO
+    workouts (workoutid, workouttime, userref)
+    VALUES ($1, $2, $3)
+    RETURNING *`,
+  getWorkoutByUser: `SELECT * 
+    FROM workouts
+    WHERE userref = $1`,
+  addExercise: `INSERT INTO
+    exercises (exerciseid, exercisename, reps, weight)
+    VALUES ($1, $2, $3, $4)
+    RETURNING *`
 };

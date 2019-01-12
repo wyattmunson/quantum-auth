@@ -82,3 +82,27 @@ export const formatMealItem = rows => {
   }
   return rows;
 };
+
+// FORMAT CREATE WORKOUT
+export const formatCreateWorkout = rows => {
+  let response = rows[0];
+  response.workoutId = response.workoutid;
+  delete response.workoutid;
+  response.workoutDate = response.workouttime;
+  delete response.workouttime;
+  response.userId = response.userref;
+  delete response.userref;
+  return response;
+};
+
+export const formatWorkoutList = rows => {
+  for (let item of rows) {
+    item.workoutId = item.workoutid;
+    delete item.workoutid;
+    item.workoutDate = item.workouttime;
+    delete item.workouttime;
+    item.userId = item.userref;
+    delete item.userref;
+  }
+  return rows;
+};

@@ -65,6 +65,24 @@ const createIngredientTable = () => {
   );`;
 };
 
+const createWorkoutTable = () => {
+  return `CREATE TABLE IF NOT EXISTS workouts (
+    workoutid UUID PRIMARY KEY,
+    workouttime TIMESTAMP WITH TIME ZONE,
+    userref UUID references users (userid)
+  )
+  `;
+};
+
+const createExerciseTable = () => {
+  return `CREATE TABLE IF NOT EXISTS exercises (
+    exerciseid UUID PRIMARY KEY,
+    exercisename VARCHAR(63),
+    reps SMALLINT,
+    weight SMALLINT
+  )`;
+};
+
 // DELETE USERS TABLE
 const deleteUsersTable = () => {
   return `DROP TABLE IF EXISTS users;`;
@@ -82,5 +100,7 @@ module.exports = {
   deleteNotesTable,
   createMealsTable,
   createMealItemTable,
-  createIngredientTable
+  createIngredientTable,
+  createExerciseTable,
+  createWorkoutTable
 };

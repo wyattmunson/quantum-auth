@@ -5,6 +5,7 @@ import Notes from "./src/controllers/Notes";
 import User from "./src/controllers/User";
 import Meal from "./src/controllers/Meal";
 import Auth from "./src/middleware/Auth";
+import Workout from "./src/controllers/Workout";
 import { greenText, redText, underline, cyanText } from "./src/utils/colors";
 
 const app = express();
@@ -15,7 +16,7 @@ app.use(express.json());
 app.use((req, res, next) => {
   res.append("Access-Control-Allow-Origin", ["*"]);
   res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-  // res.append("Allow", "GET,PUT,POST,DELETE,OPTIONS,HEAD");
+  res.append("Allow", "GET,PUT,POST,DELETE,OPTIONS,HEAD");
   res.append("Access-Control-Allow-Headers", "Content-Type");
   res.append("Access-Control-Allow-Headers", "x-access-token");
   next();
@@ -51,6 +52,11 @@ app.post("/api/v1/meals", Meal.create);
 app.get("/api/v1/meals/byuser", Meal.getByUser);
 app.get("/api/v1/meals/withitems", Meal.getMealWithItem);
 app.post("/api/v1/meals/item", Meal.addItemToMeal);
+
+// WOKROUT ROUTES
+app.post("/api/v1/workout", Workout.create);
+app.get("/api/v1/workout", Workout.getByUser);
+app.post("/api/v1/exercises", Workout.createExercise);
 
 app.listen(5151);
 console.log(underline("QUANTUM AUTH"));

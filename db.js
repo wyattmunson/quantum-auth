@@ -1,6 +1,8 @@
 const { Pool } = require("pg");
 const dotenv = require("dotenv");
 const scripts = require("./src/db/scripts");
+// const colors = require("./src/utils/colors");
+// import { greenText } from "./src/utils/colors";
 
 dotenv.config();
 
@@ -20,10 +22,12 @@ const makeDatabaseCall = input => {
   pool
     .query(input)
     .then(res => {
+      console.log("OK  : Successful call to DB. Output below:");
       console.log(res);
       pool.end();
     })
     .catch(err => {
+      console.log("ERR : Call to DB failed. Output below:");
       console.log(err);
       pool.end();
     });
@@ -44,6 +48,14 @@ const createMealsTable = () => {
 
 const createMealItemTable = () => {
   makeDatabaseCall(scripts.createMealItemTable());
+};
+
+const createWorkoutTable = () => {
+  makeDatabaseCall(scripts.createWorkoutTable());
+};
+
+const createExerciseTable = () => {
+  makeDatabaseCall(scripts.createExerciseTable());
 };
 
 // Create tables
@@ -97,7 +109,9 @@ module.exports = {
   createNotesTable,
   createUsersTable,
   createMealsTable,
-  createMealItemTable
+  createMealItemTable,
+  createExerciseTable,
+  createWorkoutTable
 };
 
 require("make-runnable");
