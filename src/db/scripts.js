@@ -69,6 +69,8 @@ const createWorkoutTable = () => {
   return `CREATE TABLE IF NOT EXISTS workouts (
     workoutid UUID PRIMARY KEY,
     workouttime TIMESTAMP WITH TIME ZONE,
+    starttime TIMESTAMP WITH TIME ZONE,
+    endtime TIMESTAMP WITH TIME ZONE,
     userref UUID references users (userid)
   )
   `;
@@ -77,6 +79,7 @@ const createWorkoutTable = () => {
 const createExerciseTable = () => {
   return `CREATE TABLE IF NOT EXISTS exercises (
     exerciseid UUID PRIMARY KEY,
+    workoutref UUID REFERENCES workouts (workoutid),
     exercisename VARCHAR(63),
     reps SMALLINT,
     weight SMALLINT

@@ -103,6 +103,22 @@ export const formatWorkoutList = rows => {
     delete item.workouttime;
     item.userId = item.userref;
     delete item.userref;
+    item.startTime = item.starttime;
+    delete item.starttime;
+    item.endTime = item.endtime;
+    delete item.endtime;
+  }
+  return rows;
+};
+
+export const formatExerciseList = rows => {
+  for (let item of rows) {
+    item.workoutId = item.workoutref;
+    delete item.workoutref;
+    item.exerciseName = item.exercisename;
+    delete item.exercisename;
+    item.exerciseId = item.exerciseid;
+    delete item.exerciseid;
   }
   return rows;
 };

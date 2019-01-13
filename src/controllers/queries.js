@@ -40,14 +40,30 @@ module.exports = {
 
   // WORKOUT QUERIES
   createWorkout: `INSERT INTO
-    workouts (workoutid, workouttime, userref)
-    VALUES ($1, $2, $3)
+    workouts (workoutid, workouttime, userref, starttime)
+    VALUES ($1, $2, $3, $4)
     RETURNING *`,
   getWorkoutByUser: `SELECT * 
     FROM workouts
-    WHERE userref = $1`,
+    WHERE userref = $1
+    ORDER BY starttime DESC`,
   addExercise: `INSERT INTO
-    exercises (exerciseid, exercisename, reps, weight)
-    VALUES ($1, $2, $3, $4)
+    exercises (exerciseid, exercisename, reps, weight, workoutref)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING *`,
+  endExercise: `UPDATE workouts
+    SET endtime = $1
+    WHERE workoutid = $2
+    RETURNING *`,
+  getLastWorkout: `SELECT *
+      FROM workouts
+      WHERE userref = $1
+      ORDER BY starttime DESC LIMIT 1`,
+  exerciseByWorkout: `SELECT *
+    FROM exercises
+    WHERE workoutref = $1`,
+  deleteWorkout: `DELETE
+    FROM workouts
+    WHERE workoutid = $1
     RETURNING *`
 };

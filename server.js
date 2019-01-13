@@ -57,6 +57,10 @@ app.post("/api/v1/meals/item", Meal.addItemToMeal);
 app.post("/api/v1/workout", Workout.create);
 app.get("/api/v1/workout", Workout.getByUser);
 app.post("/api/v1/exercises", Workout.createExercise);
+app.post("/api/v1/workout/end", Workout.endWorkout);
+app.get("/api/v1/workout/latest", Workout.getLastWorkout);
+app.get("/api/v1/workout/withexercise", Workout.getWorkoutWithExercises);
+app.delete("/api/v1/workout", Workout.deleteWorkout);
 
 app.listen(5151);
 console.log(underline("QUANTUM AUTH"));
