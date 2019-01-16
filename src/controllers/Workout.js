@@ -79,6 +79,7 @@ const Workout = {
 
     try {
       const { rows } = await db.query(queries.addExercise, values);
+      console.log(greenText(200), "POST /aapi/v1/workout/exercises");
       return res.status(201).send(rows[0]);
     } catch (err) {
       console.log(err);
@@ -90,6 +91,7 @@ const Workout = {
     const values = [req.body.endTime, req.body.workoutId];
     try {
       const { rows } = await db.query(queries.endExercise, values);
+      console.log(greenText(200), "POST /api/v1/workout/end");
       return res.status(200).send(rows);
     } catch (err) {
       console.log(redText(400), "POST /api/v1/workouts/end");
@@ -133,14 +135,11 @@ const Workout = {
         const { rows } = await db.query(queries.exerciseByWorkout, [workoutId]);
 
         formatExerciseList(rows);
-        console.log("INTERNAL ROWS", rows);
-        console.log("ITEM", item);
         let exerciseItemList = rows;
         let obj = exerciseList.find(x => x.workoutId === item.workoutId);
-        console.log("OB", obj);
         obj.exerciseItems = exerciseItemList;
       }
-
+      console.log(greenText(200), "POST /api/v1/workout/withexercise");
       return res.status(200).send({ rows });
     } catch (err) {
       console.log(err);
@@ -153,11 +152,9 @@ const Workout = {
       const { rows } = await db.query(queries.deleteWorkout, [
         req.query.workoutId
       ]);
-      console.log("Params:", req);
-      console.log("RES ROWS", rows);
-      //   if (!rows[0]) {
-      //     return res.status(404).send({ message: "No rows found" });
-      //   }
+      if (!rows[0]) {
+        return res.status(404).send({ message: "No rows found" });
+      }
       return res.sendStatus(204);
     } catch (err) {
       console.log(redText(400), "DELETE /api/v1/workout");

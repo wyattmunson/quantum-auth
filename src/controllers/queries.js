@@ -3,14 +3,24 @@ module.exports = {
   selectAllNotes: `SELECT * FROM notes;`,
   selectNoteById: `SELECT * FROM notes WHERE noteid=$1;`,
   createNote: `INSERT INTO
-    notes (noteid, userid, notecontent, noteheader, createddate, modifieddate, notetype)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    notes (noteid, userid, notecontent, noteheader, createddate, modifieddate, notetype, duedate)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     RETURNING *`,
   updateNote: `UPDATE notes
     SET userid=$1, notecontent=$2, noteheader=$3, createddate=$4
     WHERE noteid=$5
     RETURNING *`,
   deleteNotes: `DELETE FROM notes WHERE noteid=$1 RETURNING *`,
+
+  getNotesDesc: `SELECT *
+    FROM notes 
+    WHERE userid=$1
+    ORDER BY createddate DESC`,
+
+  getNoteByType: `SELECT * 
+    FROM notes
+    WHERE userid=$1 AND notetype=$2
+    ORDER BY createddate DESC`,
 
   // USER QUERIES
   selectUserByEmail: `SELECT * FROM users WHERE email = $1`,
@@ -65,5 +75,32 @@ module.exports = {
   deleteWorkout: `DELETE
     FROM workouts
     WHERE workoutid = $1
-    RETURNING *`
+    RETURNING *`,
+
+  // TRANSACTIONS
+  createTrans: `INSERT INTO 
+      trans (userref, createddate, transid)
+      VALUES ($1, $2, $3)
+      RETURNING *`,
+  addLineItem: `INSERT INTO
+    lineitem (lineitemid, transref, price, units, item, total)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *`,
+  closeTrans: `UPDATE trans
+    SET closedate = $1, updateddate = $1, transtotal = $3
+    WHERE transid = $2
+    RETURNING *`,
+  getTrans: `SELECT * 
+    FROM trans
+    ORDER BY createddate DESC
+    `,
+  getTransById: `SELECT *
+    FROM trans
+    WHERE transid=$1`,
+  getLineItemsByTrans: `SELECT *
+    FROM lineitem
+    WHERE transref=$1`,
+  deleteTrans: `DELETE
+    FROM trans
+    WHERE transid=$1`
 };

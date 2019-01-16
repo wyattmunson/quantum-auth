@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import db from "../db";
 import queries from "./queries";
 import { greenText, redText } from "../utils/colors";
+import { formatNotes } from "./responseFormatter";
 
 const Note = {
   // CREATE NTOE
@@ -19,7 +20,8 @@ const Note = {
       req.body.noteHeader,
       moment(new Date()),
       moment(new Date()),
-      req.body.noteType
+      req.body.noteType,
+      req.body.dueDate || null
     ];
 
     try {
@@ -65,18 +67,67 @@ const Note = {
 
   // GET NOTE BY USERID
   async getUserNotes(req, res) {
-    console.log("GET NOTES BY USER HIT");
+    // Get userId from token
+    const token = req.headers["x-access-token"];
+    try {
+      const decodeToken = await jwt.verify(token, process.env.SECRET);
+      if (!decodeToken) {
+        return res.status(401).send({ message: "Token expired" });
+      }
+      const queryText = `SELECT * FROM notes WHERE userid=$1`;
+      const { rows } = await db.query(queryText, [decodeToken.userId]);
+      if (!rows[0]) {
+        console.log(redText(404), "POST /api/v1/notes/byuser");
+        return res.status(404).send({ message: "No notes found" });
+      }
+      console.log(greenText(200), "POST /api/v1/notes/byuser");
+      return res.status(200).send(formatNotes(rows));
+    } catch (error) {
+      console.log(redText("400"), error);
+      return res.status(400).send(error);
+    }
+  },
+
+  // THIS IS NOT USED
+  async getNotesType(req, res) {
+    // console.log("GET NOTES BY USER HIT");
     // Get userId from token
     const token = req.headers["x-access-token"];
     const decodeToken = await jwt.verify(token, process.env.SECRET);
     console.log("DECODED TOKEN:", decodeToken.userId);
     try {
-      const queryText = `SELECT * FROM notes WHERE userid=$1`;
+      const queryText = `SELECT * FROM notes WHERE userid=$1 AND notetype='note'`;
       const { rows } = await db.query(queryText, [decodeToken.userId]);
       if (!rows[0]) {
+        // console.log(redText(404), "POST /api/v1/notes/byuser");
         return res.status(404).send({ message: "No notes found" });
       }
-      return res.status(200).send({ rows });
+      console.log(greenText(200), "GET /api/v1/notes/notes");
+      return res.status(200).send(formatNotes(rows));
+    } catch (error) {
+      console.log(redText("400"), error);
+      return res.status(400).send(error);
+    }
+  },
+
+  // GET NOTES BY USER ID FILTERED BY NOTE TYPE
+  async filterNotes(req, res) {
+    // Get userId from token
+    const token = req.headers["x-access-token"];
+    const decodeToken = await jwt.verify(token, process.env.SECRET);
+
+    try {
+      const queryText = queries.getNoteByType;
+      const { rows } = await db.query(queryText, [
+        decodeToken.userId,
+        req.body.noteType
+      ]);
+      if (!rows[0]) {
+        console.log(redText(404), "POST /api/v1/notes/filter");
+        return res.status(404).send({ message: "No notes found" });
+      }
+      console.log(greenText(200), "POST /api/v1/notes/filter");
+      return res.status(200).send(formatNotes(rows));
     } catch (error) {
       console.log(redText("400"), error);
       return res.status(400).send(error);

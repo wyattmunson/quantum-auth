@@ -7,7 +7,8 @@ const createNotesTable = () => {
         notecontent VARCHAR(255),
         noteheader VARCHAR(64),
         createddate TIMESTAMP WITH TIME ZONE,
-        modifieddate TIMESTAMP WITH TIME ZONE
+        modifieddate TIMESTAMP WITH TIME ZONE,
+        duedate TIMESTAMP WITH TIME ZONE
     );`;
 };
 
@@ -79,10 +80,30 @@ const createWorkoutTable = () => {
 const createExerciseTable = () => {
   return `CREATE TABLE IF NOT EXISTS exercises (
     exerciseid UUID PRIMARY KEY,
-    workoutref UUID REFERENCES workouts (workoutid),
+    workoutref UUID REFERENCES workouts (workoutid) ON DELETE CASCADE,
     exercisename VARCHAR(63),
     reps SMALLINT,
     weight SMALLINT
+  )`;
+};
+
+const createTransTable = () => {
+  return `CREATE TABLE IF NOT EXISTS trans (
+    transid UUID PRIMARY KEY,
+    userref UUID REFERENCES users (userid) ON DELETE CASCADE,
+    createddate TIMESTAMP WITH TIME ZONE,
+    updateddate TIMESTAMP WITH TIME ZONE
+  )`;
+};
+
+const createLineItemTable = () => {
+  return `CREATE TABLE IF NOT EXISTS lineitem (
+    lineitemid UUID PRIMARY KEY,
+    transref UUID REFERENCES trans (transid) ON DELETE CASCADE,
+    item VARCHAR(255),
+    price DECIMAL(12,2),
+    units DECIMAL(12,2),
+    total DECIMAL(12,2)
   )`;
 };
 
@@ -105,5 +126,7 @@ module.exports = {
   createMealItemTable,
   createIngredientTable,
   createExerciseTable,
-  createWorkoutTable
+  createWorkoutTable,
+  createTransTable,
+  createLineItemTable
 };

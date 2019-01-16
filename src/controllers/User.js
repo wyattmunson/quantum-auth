@@ -84,7 +84,6 @@ const User = {
     if (!token) {
       return res.status(400).send({ message: "Must include token" });
     }
-    console.log("GET ME HIT");
     try {
       const decodeToken = await jwt.verify(token, process.env.SECRET);
       const { rows } = await db.query(queries.selectUserById, [

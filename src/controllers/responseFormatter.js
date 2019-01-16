@@ -122,3 +122,79 @@ export const formatExerciseList = rows => {
   }
   return rows;
 };
+
+export const formatNotes = rows => {
+  for (let item of rows) {
+    item.createdDate = item.createddate;
+    delete item.createddate;
+    item.dueDate = item.duedate;
+    delete item.duedate;
+    item.modifiedDate = item.modifieddate;
+    delete item.modifieddate;
+    item.noteContent = item.notecontent;
+    delete item.notecontent;
+    item.noteHeader = item.noteheader;
+    delete item.noteheader;
+    item.noteId = item.noteid;
+    delete item.noteid;
+    item.noteType = item.notetype;
+    delete item.notetype;
+    item.userId = item.userid;
+    delete item.userid;
+  }
+  return rows;
+};
+
+export const formatTrans = rows => {
+  let item = rows[0];
+  item.transId = item.transid;
+  delete item.transid;
+  item.userId = item.userref;
+  delete item.userref;
+  item.createdDate = item.createddate;
+  delete item.createddate;
+  item.updatedDate = item.updateddate;
+  delete item.updateddate;
+  item.closeDate = item.closedate;
+  delete item.closedate;
+  item.transTotal = item.transtotal;
+  delete item.transtotal;
+  return item;
+};
+
+export const formatTransList = rows => {
+  for (let item of rows) {
+    item.transId = item.transid;
+    delete item.transid;
+    item.userId = item.userref;
+    delete item.userref;
+    item.createdDate = item.createddate;
+    delete item.createddate;
+    item.updatedDate = item.updateddate;
+    delete item.updateddate;
+    item.closeDate = item.closedate;
+    delete item.closedate;
+    item.transTotal = item.transtotal;
+    delete item.transtotal;
+  }
+  return rows;
+};
+
+export const formatLineItem = rows => {
+  let item = rows[0];
+  item.lineItemId = item.lineitemid;
+  delete item.lineitemid;
+  item.transId = item.transref;
+  delete item.transref;
+  return item;
+};
+
+export const formatLineItemList = rows => {
+  for (let item of rows) {
+    item.lineItemId = item.lineitemid;
+    delete item.lineitemid;
+    item.transId = item.transref;
+    delete item.transref;
+  }
+  return rows;
+};

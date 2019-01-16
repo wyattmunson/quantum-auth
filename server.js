@@ -6,6 +6,7 @@ import User from "./src/controllers/User";
 import Meal from "./src/controllers/Meal";
 import Auth from "./src/middleware/Auth";
 import Workout from "./src/controllers/Workout";
+import Transactions from "./src/controllers/Transactions";
 import { greenText, redText, underline, cyanText } from "./src/utils/colors";
 
 const app = express();
@@ -40,6 +41,7 @@ app.get("/api/v1/notes/byuser", Notes.getUserNotes);
 app.get("/api/v1/notes/:id", Notes.getOne);
 app.put("/api/v1/notes/:id", Notes.update);
 app.delete("/api/v1/notes/:id", Notes.delete);
+app.post("/api/v1/notes/filter", Notes.filterNotes);
 
 // USER ROUTES
 app.post("/api/v1/users", User.create);
@@ -61,6 +63,14 @@ app.post("/api/v1/workout/end", Workout.endWorkout);
 app.get("/api/v1/workout/latest", Workout.getLastWorkout);
 app.get("/api/v1/workout/withexercise", Workout.getWorkoutWithExercises);
 app.delete("/api/v1/workout", Workout.deleteWorkout);
+
+// TRAANS
+app.get("/api/v1/trans", Transactions.listTrans);
+app.post("/api/v1/trans", Transactions.create);
+app.post("/api/v1/trans/lineitem", Transactions.addLineItem);
+// app.post("/api/v1/trans/close", Transactions.closeTrans);
+app.post("/api/v1/trans/close", Transactions.close);
+app.get("/api/v1/trans/byid", Transactions.getTransById);
 
 app.listen(5151);
 console.log(underline("QUANTUM AUTH"));

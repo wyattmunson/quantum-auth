@@ -58,6 +58,14 @@ const createExerciseTable = () => {
   makeDatabaseCall(scripts.createExerciseTable());
 };
 
+const createTransTable = () => {
+  makeDatabaseCall(scripts.createTransTable());
+};
+
+const createLineItemTable = () => {
+  makeDatabaseCall(scripts.createLineItemTable());
+};
+
 // Create tables
 const createTables = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
@@ -111,7 +119,9 @@ module.exports = {
   createMealsTable,
   createMealItemTable,
   createExerciseTable,
-  createWorkoutTable
+  createWorkoutTable,
+  createTransTable,
+  createLineItemTable
 };
 
 require("make-runnable");
