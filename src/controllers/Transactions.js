@@ -10,13 +10,16 @@ import {
   formatLineItemList
 } from "./responseFormatter";
 import { redText, greenText } from "../utils/colors";
-import { deepEqual } from "assert";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 console.log(moment(new Date()));
 
 const Transactions = {
   async create(req, res) {
     const token = req.headers["x-access-token"];
+    console.log("PROCESS ENV", process.env.SECRET);
 
     try {
       const decodeToken = await jwt.verify(token, process.env.SECRET);

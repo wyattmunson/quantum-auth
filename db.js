@@ -7,11 +7,12 @@ const scripts = require("./src/db/scripts");
 dotenv.config();
 
 const pool = new Pool({
-  host: process.env.RDS_HOSTNAME,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT,
-  database: process.env.RDS_DB_NAME
+  // host: process.env.RDS_HOSTNAME,
+  // user: process.env.RDS_USERNAME,
+  // password: process.env.RDS_PASSWORD,
+  // port: process.env.RDS_PORT,
+  // database: process.env.RDS_DB_NAME
+  connectionString: process.env.DATABASE_URL
 });
 
 pool.on("connect", () => {
@@ -64,6 +65,14 @@ const createTransTable = () => {
 
 const createLineItemTable = () => {
   makeDatabaseCall(scripts.createLineItemTable());
+};
+
+const createTripsTable = () => {
+  makeDatabaseCall(scripts.createTripTable());
+};
+
+const createEventsTable = () => {
+  makeDatabaseCall(scripts.createEventsTable());
 };
 
 // Create tables
@@ -121,7 +130,9 @@ module.exports = {
   createExerciseTable,
   createWorkoutTable,
   createTransTable,
-  createLineItemTable
+  createLineItemTable,
+  createTripsTable,
+  createEventsTable
 };
 
 require("make-runnable");

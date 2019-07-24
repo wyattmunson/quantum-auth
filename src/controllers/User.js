@@ -58,9 +58,7 @@ const User = {
       return res.status(400).send({ message: "That's not a valid email" });
     }
     try {
-      const { rows } = await db.query(queries.selectUserByEmail, [
-        req.body.email
-      ]);
+      const { rows } = await db.query(queries.selectUserByEmail, [req.body.email]);
       if (!rows[0]) {
         return res.status(400).send({ message: "That's not a valid login" });
       }
@@ -86,9 +84,7 @@ const User = {
     }
     try {
       const decodeToken = await jwt.verify(token, process.env.SECRET);
-      const { rows } = await db.query(queries.selectUserById, [
-        decodeToken.userId
-      ]);
+      const { rows } = await db.query(queries.selectUserById, [decodeToken.userId]);
       if (!rows[0]) {
         return res.status(400).send({ message: "Token invalid" });
       }
@@ -113,9 +109,10 @@ const User = {
         return res.status(400).send({ message: "No such user" });
       }
       return res.sendStatus(204);
-    } catch (err) {
+    } catch (error) {
+      console.log(req.user.userid);
       console.log(redText("400"), error);
-      return res.status(400).send(err);
+      return res.status(400).send(error);
     }
   }
 };

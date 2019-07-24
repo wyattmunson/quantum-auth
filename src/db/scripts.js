@@ -107,6 +107,30 @@ const createLineItemTable = () => {
   )`;
 };
 
+const createTripTable = () => {
+  return `CREATE TABLE IF NOT EXISTS trips (
+    tripid UUID PRIMARY KEY,
+    userid UUID REFERENCES users (userid) ON DELETE CASCADE,
+    name VARCHAR(255),
+    cities VARCHAR(255),
+    startdate TIMESTAMP WITH TIME ZONE,
+    enddate TIMESTAMP WITH TIME ZONE
+  )`;
+};
+
+const createEventsTable = () => {
+  return `CREATE TABLE IF NOT EXISTS events (
+    eventid UUID PRIMARY KEY,
+    trip UUID REFERENCES trips (tripid) ON DELETE CASCADE,
+    type VARCHAR(16),
+    icon VARCHAR(32),
+    startdate TIMESTAMP WITH TIME ZONE,
+    enddate TIMESTAMP WITH TIME ZONE,
+    title VARCHAR(255),
+    subtext VARCHAR(255)
+  )`;
+};
+
 // DELETE USERS TABLE
 const deleteUsersTable = () => {
   return `DROP TABLE IF EXISTS users;`;
@@ -128,5 +152,7 @@ module.exports = {
   createExerciseTable,
   createWorkoutTable,
   createTransTable,
-  createLineItemTable
+  createLineItemTable,
+  createTripTable,
+  createEventsTable
 };

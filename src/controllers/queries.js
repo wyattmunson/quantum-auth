@@ -102,5 +102,31 @@ module.exports = {
     WHERE transref=$1`,
   deleteTrans: `DELETE
     FROM trans
-    WHERE transid=$1`
+    WHERE transid=$1`,
+
+  // TRIP QUERIES
+  createTrip: `INSERT INTO
+    trips (tripid, userid, name, cities, startdate, enddate)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *`,
+  getUserTrip: `SELECT *
+    FROM trips
+    WHERE userid=$1`,
+  getUserTripWithEvent: `SELECT a.userid userid, a.tripid tripid, a.name tripname, b.trip tripid, b.eventid eventid, b.type triptype, b.icon icon, b.startdate startdate, b.enddate enddate, b.title title, b.subtext subtext
+    FROM trips a
+    LEFT JOIN events b ON a.tripid = b.trip
+    WHERE a.userid=$1`,
+
+  // EVENT QUERIES
+  createEvent: `INSERT INTO
+    events (eventid, trip, type, icon, startdate, enddate, title, subtext)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING *`,
+  getEventById: `SELECT *
+    FROM events
+    WHERE trip=$1`,
+  deleteEvent: `DELETE
+    FROM events
+    WHERE eventid=$1
+    RETURNING *`
 };

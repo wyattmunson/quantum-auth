@@ -7,6 +7,8 @@ import Meal from "./src/controllers/Meal";
 import Auth from "./src/middleware/Auth";
 import Workout from "./src/controllers/Workout";
 import Transactions from "./src/controllers/Transactions";
+import Trips from "./src/controllers/Trips";
+import Events from "./src/controllers/Events";
 import { greenText, redText, underline, cyanText } from "./src/utils/colors";
 
 const app = express();
@@ -15,7 +17,10 @@ app.use(express.json());
 
 // I love it - CORS solution
 app.use((req, res, next) => {
-  res.append("Access-Control-Allow-Origin", ["*"]);
+  console.log("INFO: Request recieved");
+  // res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.append("Access-Control-Allow-Origin", "*");
   res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
   res.append("Allow", "GET,PUT,POST,DELETE,OPTIONS,HEAD");
   res.append("Access-Control-Allow-Headers", "Content-Type");
@@ -25,9 +30,7 @@ app.use((req, res, next) => {
 
 // Healthcheck endpoint
 app.get("/", (req, res) => {
-  return res
-    .status(200)
-    .send({ message: "I can't take another 199 of these!" });
+  return res.status(200).send({ message: "I can't take another 199 of these!" });
 });
 
 ///////////////
@@ -71,6 +74,16 @@ app.post("/api/v1/trans/lineitem", Transactions.addLineItem);
 // app.post("/api/v1/trans/close", Transactions.closeTrans);
 app.post("/api/v1/trans/close", Transactions.close);
 app.get("/api/v1/trans/byid", Transactions.getTransById);
+
+// TRIPS
+app.post("/api/v1/trips", Trips.create);
+app.get("/api/v1/trips/mine", Trips.getMyTrips);
+app.get("/api/v1/trips/mine/event", Trips.getMyTripsWithEvents);
+
+app.post("/api/v1/event", Events.create);
+app.post("/api/v1/eventbytrip", Events.getEventById);
+app.get("/api/v1/events/mine", Events.getEventById);
+app.delete("/api/v1/event", Events.delete);
 
 app.listen(5151);
 console.log(underline("QUANTUM AUTH"));
